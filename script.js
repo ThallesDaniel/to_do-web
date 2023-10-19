@@ -1,8 +1,6 @@
 const taskInput = document.getElementById("taskInput");
 const addTask = document.getElementById("addTask");
 const taskList = document.getElementById("taskList");
-
-// Carregar tarefas do localStorage
 const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 function saveTasks() {
@@ -19,6 +17,22 @@ function renderTasks() {
     taskText.textContent = task;
     li.appendChild(taskText);
 
+    const buttonsDiv = document.createElement("div");
+    buttonsDiv.className = "space-x-2";
+
+    const editButton = document.createElement("button");
+    editButton.textContent = "Editar";
+    editButton.className = "text-blue-500";
+    editButton.addEventListener("click", () => {
+      const updatedTask = prompt("Editar a tarefa:", task);
+      if (updatedTask !== null) {
+        tasks[index] = updatedTask;
+        saveTasks();
+        renderTasks();
+      }
+    });
+    buttonsDiv.appendChild(editButton);
+
     const removeButton = document.createElement("button");
     removeButton.textContent = "Remover";
     removeButton.className = "text-red-500";
@@ -27,8 +41,9 @@ function renderTasks() {
       saveTasks();
       renderTasks();
     });
-    li.appendChild(removeButton);
+    buttonsDiv.appendChild(removeButton);
 
+    li.appendChild(buttonsDiv);
     taskList.appendChild(li);
   });
 }
