@@ -1,11 +1,16 @@
 const taskInput = document.getElementById("taskInput");
 const addTask = document.getElementById("addTask");
 const taskList = document.getElementById("taskList");
+const shareButton = document.getElementById("shareTasks");
+const sharedLinkInput = document.getElementById("sharedLink");
+const shareLinkContainer = document.getElementById("shareLink");
+
 const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
+
 
 function renderTasks() {
   taskList.innerHTML = "";
@@ -31,6 +36,7 @@ function renderTasks() {
         renderTasks();
       }
     });
+
     buttonsDiv.appendChild(editButton);
 
     const removeButton = document.createElement("button");
@@ -48,6 +54,31 @@ function renderTasks() {
   });
 }
 
+shareButton.addEventListener("click", () => {
+  const sharedData = { tasks };
+  const sharedLink = `${window.location.href.split("?")[0]}?data=${btoa(
+    JSON.stringify(sharedData)
+  )}`;
+  sharedLinkInput.value = sharedLink;
+  shareLinkContainer.classList.remove("hidden");
+});
+
+function loadSharedTasks() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedData = urlParams.get("data");
+  if (sharedData) {
+    try {
+      const decodedData = atob(sharedData);
+      const sharedTasks = JSON.parse(decodedData);
+      tasks.length = 0;
+      tasks.push(...sharedTasks.tasks);
+      saveTasks();
+      renderTasks();
+    } catch (error) {
+      console.error("Erro ao carregar tarefas compartilhadas:", error);
+    }
+  }
+}
 addTask.addEventListener("click", () => {
   const newTask = taskInput.value.trim();
   if (newTask !== "") {
@@ -57,5 +88,8 @@ addTask.addEventListener("click", () => {
     taskInput.value = "";
   }
 });
+
+
+loadSharedTasks();
 
 renderTasks();
