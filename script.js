@@ -11,12 +11,13 @@ function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-
 function renderTasks() {
   taskList.innerHTML = "";
   tasks.forEach((task, index) => {
     const li = document.createElement("li");
-    li.className = "flex justify-between p-2 border-t";
+    li.className = "flex justify-between p-2 border-t draggable";
+    li.setAttribute("draggable", true);
+    li.dataset.index = index;
 
     const taskText = document.createElement("span");
     taskText.textContent = task;
@@ -54,6 +55,30 @@ function renderTasks() {
   });
 }
 
+function handleDragStart(e) {
+  e.dataTransfer.setData("text/plain", e.target.dataset.index);
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  const fromIndex = e.dataTransfer.getData("text/plain");
+  const toIndex = e.target.dataset.index;
+
+  // Troca a posição dos itens na array "tasks"
+  [tasks[fromIndex], tasks[toIndex]] = [tasks[toIndex], tasks[fromIndex]];
+
+  saveTasks();
+  renderTasks();
+}
+
+// Adicione eventos de arrastar e soltar aos itens da lista
+document.addEventListener("dragstart", handleDragStart);
+document.addEventListener("dragover", handleDragOver);
+document.addEventListener("drop", handleDrop);
 shareButton.addEventListener("click", () => {
   const sharedData = { tasks };
   const sharedLink = `${window.location.href.split("?")[0]}?data=${btoa(
@@ -79,6 +104,24 @@ function loadSharedTasks() {
     }
   }
 }
+function addTaskHandler() {
+  const newTask = taskInput.value.trim();
+  if (newTask !== "") {
+    tasks.push(newTask);
+    saveTasks();
+    renderTasks();
+    taskInput.value = "";
+  }
+}
+
+addTask.addEventListener("click", addTaskHandler);
+
+taskInput.addEventListener("keyup", (event) => {
+  if (event.key === "Enter") {
+    addTaskHandler();
+  }
+});
+
 addTask.addEventListener("click", () => {
   const newTask = taskInput.value.trim();
   if (newTask !== "") {
@@ -89,6 +132,11 @@ addTask.addEventListener("click", () => {
   }
 });
 
+const shareIcon = document.getElementById("shareIcon");
+
+shareIcon.addEventListener("click", () => {
+  shareLinkContainer.classList.toggle("hidden");
+});
 
 loadSharedTasks();
 
