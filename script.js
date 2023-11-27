@@ -19,9 +19,28 @@ function renderTasks() {
     li.setAttribute("draggable", true);
     li.dataset.index = index;
 
+    // Adiciona a checkbox
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "mr-2";
+    li.appendChild(checkbox);
+
+    // // Adiciona o ícone de três linhas
+    // const linesIcon = document.createElement("div");
+    // linesIcon.innerHTML = `
+    //   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 mr-2">
+    //     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    //   </svg>
+    // `;
+    // li.appendChild(linesIcon);
+
     const taskText = document.createElement("span");
     taskText.textContent = task;
     li.appendChild(taskText);
+
+    const dragIcon = document.createElement("i");
+    dragIcon.className = "fas fa-grip-lines";
+    dragIcon.setAttribute("aria-hidden", true);
 
     const buttonsDiv = document.createElement("div");
     buttonsDiv.className = "space-x-2";
@@ -75,7 +94,6 @@ function handleDrop(e) {
   renderTasks();
 }
 
-// Adicione eventos de arrastar e soltar aos itens da lista
 document.addEventListener("dragstart", handleDragStart);
 document.addEventListener("dragover", handleDragOver);
 document.addEventListener("drop", handleDrop);
@@ -136,6 +154,7 @@ const shareIcon = document.getElementById("shareIcon");
 
 shareIcon.addEventListener("click", () => {
   shareLinkContainer.classList.toggle("hidden");
+  shareIcon.classList.toggle("rotate-180");
 });
 
 loadSharedTasks();
