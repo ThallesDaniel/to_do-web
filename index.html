@@ -5,14 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lista de Tarefas</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css"
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/draggable/1.0.1-beta.11/draggable.bundle.legacy.min.js"></script>
   </head>
   <body class="bg-gray-100 p-4">
-    <button id="shareTasks" class="bg-green-500 text-white p-2 rounded">
-      Compartilhar
-    </button>
+    <div class="flex items-center space-x-4">
+      <button
+        type="button"
+        id="shareTasks"
+        class="bg-green-500 text-white p-2 rounded"
+      >
+        Compartilhar
+      </button>
+      <div id="shareIcon" class="cursor-pointer">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 10l7-7m0 0l7 7m-7-7v18"
+          />
+        </svg>
+      </div>
+    </div>
     <div id="shareLink" class="mt-4 hidden">
       <label>Link Compartilhável:</label>
       <input type="text" id="sharedLink" class="border p-2 w-full" readonly />
@@ -27,7 +50,11 @@
           class="flex-1 p-2 border rounded-l"
           placeholder="Adicionar uma tarefa"
         />
-        <button id="addTask" class="bg-blue-500 text-white p-2 rounded-r">
+        <button
+          type="button"
+          id="addTask"
+          class="bg-blue-500 text-white p-2 rounded-r"
+        >
           Adicionar
         </button>
       </div>
